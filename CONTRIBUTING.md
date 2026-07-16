@@ -17,6 +17,30 @@ requests are reviewed by Unstructured maintainers.
   pull request.
 - Run `./scripts/validate.sh` before opening a pull request.
 
+## Transport
+
+The manifest launches the server through `npx -y mcp-remote <url>` rather
+than pointing Gemini CLI's native `httpUrl` remote transport at the
+server directly. The Transform server authenticates with OAuth via
+Dynamic Client Registration, and Gemini CLI's native remote-OAuth path
+does not attach the acquired token on the request that follows sign-in
+for DCR / auto-discovered servers, so the connection fails to establish
+([google-gemini/gemini-cli#27745](https://github.com/google-gemini/gemini-cli/issues/27745)).
+`mcp-remote` performs the OAuth flow correctly and caches the token, so
+sign-in is a one-time browser step. The cost is a Node.js 18+ / `npx`
+runtime requirement for users.
+
+When the upstream bug is fixed and released, this can move back to the
+simpler native transport:
+
+```json
+"transform": { "httpUrl": "https://mcp.transform.unstructured.io" }
+```
+
+That change also needs `scripts/validate.sh` reverted to read the URL
+from `.mcpServers.transform.httpUrl` and the README install steps updated
+back to `/mcp auth transform`.
+
 ## Shipping updates
 
 This extension is installed from its GitHub URL

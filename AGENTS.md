@@ -37,8 +37,9 @@ or plain text.
 - If the server rejects a file format, say so and list the file. Do not
   convert files to another format to force them through unless the user
   asks.
-- On an auth error, tell the user to re-authenticate with
-  `/mcp auth transform`. Do not try to work around it.
+- On an auth error, tell the user to re-authenticate with their MCP
+  client (for the Gemini CLI extension, restarting the session re-runs
+  the browser sign-in). Do not try to work around it.
 
 ## Boundaries
 
