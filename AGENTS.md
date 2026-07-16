@@ -27,9 +27,11 @@ or plain text.
 ## Handling jobs and errors
 
 - Transform jobs can take several minutes for large or scanned documents.
-  Keep polling `check_transform_status`; do not abandon a running job or
-  submit the same files again because it feels slow. Resubmitting creates
-  duplicate jobs.
+  Keep polling `check_transform_status`, but wait between checks (a few
+  seconds, backing off toward ~15s for long-running jobs) rather than
+  calling in a tight loop, which wastes rate limit and agent iterations.
+  Do not abandon a running job or submit the same files again because it
+  feels slow; resubmitting creates duplicate jobs.
 - If a job fails, report the error to the user as returned by the server.
   Do not silently retry a failed job; ask the user before resubmitting.
 - If the server rejects a file format, say so and list the file. Do not

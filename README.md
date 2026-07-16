@@ -60,8 +60,9 @@ follow for this flow.
 ./scripts/validate.sh
 ```
 
-Checks that the manifest is valid JSON and that every file references
-the same server URL. Runs in CI on pull requests and pushes to `main`.
+Checks that the manifest is valid JSON and that no tracked file
+references a server URL other than the one in the manifest. Runs in CI on
+pull requests and pushes to `main`.
 
 ## Contributing
 
