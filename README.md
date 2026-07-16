@@ -19,9 +19,16 @@ manifest and the agent guidance the extension ships.
 gemini extensions install https://github.com/Unstructured-IO/transform-gemini-extension
 ```
 
-Then sign in once with `/mcp auth transform` (browser OAuth; no API key
-needed). The extension registers the `transform` server and ships the
-agent guidance in [`AGENTS.md`](AGENTS.md).
+The first time the `transform` server starts, a browser window opens for
+a one-time Unstructured sign-in (OAuth; no API key needed). The token is
+cached, so you only sign in once. The extension ships the agent guidance
+in [`AGENTS.md`](AGENTS.md).
+
+The server is launched through [`mcp-remote`](https://www.npmjs.com/package/mcp-remote),
+so you need Node.js 18+ with `npx` on your PATH. `mcp-remote` is fetched
+on first use. It handles the OAuth flow that Gemini CLI's native remote
+transport does not yet complete reliably; see
+[CONTRIBUTING.md](CONTRIBUTING.md#transport) for the detail.
 
 Using another tool (Claude Code, Claude Desktop, Cursor, Codex, Google
 Antigravity, Cline)? See the

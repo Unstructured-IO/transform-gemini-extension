@@ -29,16 +29,17 @@ else
     echo "SKIP: no JSON validator found for gemini-extension.json (install jq)" >&2
 fi
 
-# Extract the canonical server URL from the manifest. Parse the JSON
-# where a parser is available; only fall back to text scanning when
-# neither jq nor python3 is present.
+# Extract the canonical server URL from the manifest. The server is
+# launched through `npx mcp-remote <url>`, so the URL is the https entry
+# in the transform server's args. Parse the JSON where a parser is
+# available; only fall back to text scanning when neither jq nor python3
+# is present.
 if command -v jq >/dev/null 2>&1; then
-    canonical=$(jq -r '.mcpServers.transform.httpUrl // empty' gemini-extension.json 2>/dev/null || true)
+    canonical=$(jq -r '.mcpServers.transform.args[]? | select(startswith("https://"))' gemini-extension.json 2>/dev/null | head -1 || true)
 elif have_python; then
-    canonical=$(python3 -c 'import json; print(json.load(open("gemini-extension.json")).get("mcpServers", {}).get("transform", {}).get("httpUrl", ""))' 2>/dev/null || true)
+    canonical=$(python3 -c 'import json; args = json.load(open("gemini-extension.json")).get("mcpServers", {}).get("transform", {}).get("args", []); print(next((a for a in args if isinstance(a, str) and a.startswith("https://")), ""))' 2>/dev/null || true)
 else
-    canonical=$(grep -oE '"httpUrl"[[:space:]]*:[[:space:]]*"https://[^"]+"' gemini-extension.json \
-        | grep -oE 'https://[^"]+' | head -1 || true)
+    canonical=$(grep -oE 'https://mcp\.[A-Za-z0-9./-]*[A-Za-z0-9/-]' gemini-extension.json | head -1 || true)
 fi
 
 if [ -z "$canonical" ]; then
