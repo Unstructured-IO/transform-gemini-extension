@@ -1,0 +1,11 @@
+{
+  "name": "unstructured-transform",
+  "version": "0.1.0",
+  "description": "Parse documents (PDF, DOCX, PPTX, XLSX, HTML, EML, images, and multiple other formats) into markdown, element JSON, HTML, or plain text with the Unstructured Transform MCP server.",
+  "contextFileName": "AGENTS.md",
+  "mcpServers": {
+    "transform": {
+      "httpUrl": "https://mcp.transform.unstructured.io"
+    }
+  }
+}
